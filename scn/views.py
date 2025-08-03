@@ -35,8 +35,6 @@ class SCNUploadView(APIView):
                 chunks = chunk_text(extracted_text)
                 embeddings = get_embeddings(chunks)
                 upload_chunks(chunks, embeddings, source=str(instance.file))
-                from .weaviate_client import client
-                client.close()
 
                 return Response({
                     'file': serializer.data['file'],
@@ -48,6 +46,7 @@ class SCNUploadView(APIView):
                     'error': f"File saved but failed to extract text: {str(e)}"
                 }, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
 
+        
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 class AskQuestionAPI(APIView):
